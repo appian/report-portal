@@ -3,10 +3,12 @@ kind: Job
 metadata:
   name: {{ include "reportportal.fullname" . }}-migrations
   labels: {{ include "labels" . | indent 4 }}
+{{- if .Values.migrations.metadataAnnotations.enabled }}
   annotations:
-    {{- range $key, $value := .Values.migrations.metadataAnnotations }}
+    {{- range $key, $value := .Values.migrations.metadataAnnotations.hooks }}
     {{ $key }}: {{ $value | quote }}
     {{- end }}
+{{- end }}
 spec:
   template:
     metadata:
