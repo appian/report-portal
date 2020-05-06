@@ -4,8 +4,9 @@ metadata:
   name: {{ include "reportportal.fullname" . }}-migrations
   labels: {{ include "labels" . | indent 4 }}
   annotations:
-    "helm.sh/hook": "pre-install,pre-upgrade"
-    "helm.sh/hook-delete-policy": "before-hook-creation,hook-succeeded"
+    {{- range $key, $value := .Values.migrations.metadataAnnotations }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
 spec:
   template:
     metadata:
@@ -46,3 +47,6 @@ spec:
             cpu: {{ .Values.migrations.resources.limits.cpu }}
             memory: {{ .Values.migrations.resources.limits.memory }}
 {{ include "nodeSelector" . | indent 8 }}
+      securityContext:
+{{ toYaml .Values.migrations.securityContext | indent 8}}
+      serviceAccountName: {{ .Values.migrations.serviceAccountName }}
